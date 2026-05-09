@@ -107,6 +107,9 @@ class EcuMultiZoneTreeWidgetItem(QTreeWidgetItem):
                     widget.setPalette(p)
                     widget.setEnabled(False)
                     cellItem.setHidden(True)
+                    # Mark as "variant mismatch" so applyFilters keeps it hidden
+                    # even when the search filter is empty.
+                    cellItem.setData(0, Qt.UserRole + 1, True)
                 elif result == 1:
                     print("Disabled(1): " + self.zone + " - " + widget.getDescriptionName())
                     self.integrity = False
@@ -131,6 +134,8 @@ class EcuMultiZoneTreeWidgetItem(QTreeWidgetItem):
         widget.setPalette(p)
         widget.setEnabled(True)
         cellItem.setHidden(False)
+        # Clear the variant-mismatch marker
+        cellItem.setData(0, Qt.UserRole + 1, None)
 
 
     def __update(self):
@@ -191,4 +196,4 @@ class EcuMultiZoneTreeWidgetItem(QTreeWidgetItem):
     @Slot()
     def stateChanged(self, item: int):
         self.__update()
-
+ 
