@@ -9,7 +9,8 @@
         "key1": "60A5",
         "System 93": "BC93",
         "key3": "2305",
-        "System 90/92/93": "ABFB"
+        "System 90/92/93": "ABFB",
+        "System 90/92/93_v2": "226E"
     },
     "coding": true,
     "errors": true,
@@ -184,7 +185,7 @@
                         "value": "FFEFFFFFFFFFFFFF"
                     },
                     {
-                        "name": "1.6t (EP6FADTXHP / EP6FADTXHPE / EP6FADTXHPD E6.4 / EP6FADTXHPE E6.4 / EP6FADTXHPD / EP6FADTXHPE (PHEV) / EP6FADTXHPE E6.4 (PHEV) / EP6FADTXHP E6.4 / EP6FADTXHPD E6.3 / EP6FADTXHPE E6.3 / EP6FADTXHP (PHEV) / EP6FADTXHP 1.6L ESS / EP6FADTXHPD UE64 1.6L ESS / EP6FADTXHP 1.6L ESS CHINE / EP6FADTXHPE UE64 1.6L ESS / EB2LTEM EURO5)",
+                        "name": "1.6t EP6FADTXHP all types  / EB2LTEM EURO5",
                         "value": "FFBFFFFFFFFFFFFF"
                     },
                     {
@@ -1150,12 +1151,12 @@
                 "mask": "00111000",
                 "params": [
                     {
-                        "name": "With steering wheel angle sensor type 1",
-                        "mask": "00110000"
-                    },
-                    {
                         "name": "Without steering wheel angle sensor",
                         "mask": "00111000"
+                    },
+                    {
+                        "name": "With steering wheel angle sensor type 1",
+                        "mask": "00110000"
                     },
                     {
                         "name": "With steering wheel angle sensor type 3",
@@ -1176,12 +1177,12 @@
                 "mask": "00111000",
                 "params": [
                     {
-                        "name": "With steering wheel angle sensor type 1",
-                        "mask": "00110000"
-                    },
-                    {
                         "name": "Without steering wheel angle sensor",
                         "mask": "00111000"
+                    },
+                    {
+                        "name": "With steering wheel angle sensor type 1",
+                        "mask": "00110000"
                     },
                     {
                         "name": "With steering wheel angle sensor type 3",
@@ -1735,7 +1736,7 @@
             },
             "CFG_000_FREIN_UDS_LXAPR-38": {
                 "zoneLength": 38,
-                "name": "Full lane keeping assistance system",
+                "name": "Experimental: Full lane keeping assistance system",
                 "byte": 37,
                 "type": "bool",
                 "form_type": "combobox",
@@ -1753,4 +1754,4 @@
             }
         }
     }
-}
+} 
