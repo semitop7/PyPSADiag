@@ -6,7 +6,7 @@
     "dtc_lookup": "data/dtc/BCM.json",
     "key_type": "multi",
     "keys": {
-        "VERINS_MOTORISES": "****"
+        "VERINS_MOTORISES": "F18F"
     },
     "coding": true,
     "errors": true,
@@ -31,11 +31,11 @@
                 "params": [
                     {
                         "name": "Absent",
-                        "value": "00000000"
+                        "mask": "00000000"
                     },
                     {
                         "name": "Present",
-                        "value": "10000000"
+                        "mask": "10000000"
                     }
                 ]
             },
@@ -48,22 +48,22 @@
                 "params": [
                     {
                         "name": "Without anti-pinch sensors",
-                        "value": "00000000"
+                        "mask": "00000000"
                     },
                     {
                         "name": "1 anti-pinch sensor (upper sensor)",
-                        "value": "00100000"
+                        "mask": "00100000"
                     },
                     {
                         "name": "2 anti-pinch sensors (left and right sensors)",
-                        "value": "01000000"
+                        "mask": "01000000"
                     },
                     {
                         "name": "3 anti-pinch sensors (left, right and upper sensors)",
-                        "value": "01100000"
+                        "mask": "01100000"
                     }
                 ]
             }
         }
     }
-}
+} 
