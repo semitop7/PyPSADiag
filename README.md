@@ -39,11 +39,19 @@ contribute to the project, like:
 - test reports
 - spread the word!
 
-Use VCI Interface Support
+Use of VCI Interface Support
 -----
 - Install [python-3.13.12-embed-win32](https://www.python.org/ftp/python/3.13.12/python-3.13.12-embed-win32.zip) to C:\python\python32
 - VCI driver installed in device manager **(Not part of PyPSADiag)**
 - VCI communication files installed in C:\AWRoot\drv and C:\AWRoot\dtrd **(Not part of PyPSADiag)**
+
+Use of ELM327 Support
+-----
+There are few things to note regarding ELM327 adapter.
+- AEE2010 CAN-DIAG is set on pins 3/8, while ELM327 connects to pins 6/14. Therefore, to make use of it, you need to create an     adapter, that will direct pins 3/8 of an ODB port to pins 6/14 of your OBDII device.
+NEA2020 cars (newer ones) have CAN-DIAG on pins 6/14, so these cars do not need any adapters.
+
+- The OBDII device MUST be a good one, not 1$ clone from Temu/Aliexpress. It should be branded (vLinker, vGate, etc) and should have 'real' mac-address. If the OBDII device is of poor quality - then, most likely, you will simply not be able to read zones at all.
 
 Use a Release
 -----
