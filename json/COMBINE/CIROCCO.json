@@ -25,7 +25,7 @@
                 {
                     "extra_name": "CFG_EIE_CMB_SELECT_MODE_VHL_CFG_000",
                     "name_original": "SELECT_MODE_VHL",
-                    "name": "Mode Selector Switch",
+                    "name": "Dynamic Driving Mode Switch Presence",
                     "byte": 0,
                     "mask": "10000000",
                     "form_type": "checkbox",
@@ -73,24 +73,6 @@
                     "name": "Obstacle detection indicator",
                     "byte": 0,
                     "mask": "00000100",
-                    "form_type": "checkbox",
-                    "available_logic": "active_high"
-                },
-                {
-                    "extra_name": "CFG_EWR_CMB_ELECTRICAL_MOTOR_000 or CFG_D3U_CMB_CONF_FCT_DESIGNATEUR_000 or CFG_EIG_CMB_CLIM_DIST_TYPE_000",
-                    "name_original": "CFG_EWR_CMB_ELECTRICAL_MOTOR_000 or CFG_D3U_CMB_CONF_FCT_DESIGNATEUR_000 or CFG_EIG_CMB_CLIM_DIST_TYPE_000",
-                    "name": "CMB_ELECTRICAL_MOTOR or CMB_CONF_FCT_DESIGNATEUR or EIG_CMB_CLIM_DIST_TYPE",
-                    "byte": 0,
-                    "mask": "00000010",
-                    "form_type": "checkbox",
-                    "available_logic": "active_high"
-                },
-                {
-                    "extra_name": "CFG_EID_CMB_DAA4_PRESENCE_000",
-                    "name_original": "CFG_EID_CMB_DAA4_PRESENCE_000",
-                    "name": "CFG_EID_CMB_DAA4_PRESENCE_000",
-                    "byte": 0,
-                    "mask": "00000001",
                     "form_type": "checkbox",
                     "available_logic": "active_high"
                 },
@@ -241,7 +223,7 @@
                 {
                     "extra_name": "DQV_CMB_DAT_DG_ADML_CFG",
                     "name_original": "DQV",
-                    "name": "Hands free access to engine start",
+                    "name": "Hands free starting access present",
                     "byte": 11,
                     "mask": "00001000",
                     "form_type": "checkbox",
@@ -1739,7 +1721,7 @@
                 {
                     "extra_name": "DOX_CMB_DATE_TIME_SYNC",
                     "name_original": "DOX",
-                    "name": "Automatic synchronisation of the time",
+                    "name": "Synchronisation of the date/time",
                     "byte": 0,
                     "mask": "00001000",
                     "form_type": "checkbox",
@@ -1748,7 +1730,7 @@
                 {
                     "extra_name": "CFG_DOW_CMB_DATE_TIME_SYNC_INIT_001",
                     "name_original": "CFG_DOW_CMB_DATE_TIME_SYNC_INIT_001",
-                    "name": "BY DEFAULT AUTOMATIC TIME SYNCHRONIZATION",
+                    "name": "Initial synchronisation of the date/time",
                     "byte": 0,
                     "mask": "00000100",
                     "form_type": "checkbox",
@@ -1756,7 +1738,7 @@
                 },
                 {
                     "extra_name": "CFG_DOU_CMB_DATE_TIME_ZONE_000",
-                    "name_original": "CFG_DOT_CMB_DATE_TIME_ZONE_INIT_000",
+                    "name_original": "CFG_DOU_CMB_DATE_TIME_ZONE_000",
                     "name": "Timezone",
                     "byte": 1,
                     "mask": "11111111",
@@ -1765,7 +1747,7 @@
                 {
                     "extra_name": "CFG_DOT_CMB_DATE_TIME_ZONE_INIT_000",
                     "name_original": "CFG_DOT_CMB_DATE_TIME_ZONE_INIT_000",
-                    "name": "Default Time Zone",
+                    "name": "Initial Time Zone",
                     "byte": 2,
                     "mask": "11111111",
                     "form_type": "combobox",
@@ -1934,6 +1916,15 @@
                     "name": "Computer Mode",
                     "byte": 1,
                     "mask": "00000001",
+                    "form_type": "checkbox",
+                    "available_logic": "active_high"
+                },
+                {
+                    "extra_name": "CFG_E6W_CMB_RESERVED_CONFIG3_CFG_000",
+                    "name_original": "E6W",
+                    "name": "Night Vision mode",
+                    "byte": 2,
+                    "mask": "10000000",
                     "form_type": "checkbox",
                     "available_logic": "active_high"
                 },
@@ -2174,7 +2165,7 @@
                     "extra_name": "F4N_CMB_AMBIANCE_DEFAULT",
                     "name_original": "F4N",
                     "name": "Number of the default ambience",
-                    "byte": 34,
+                    "byte": 35,
                     "mask": "00001110",
                     "type": "raw",
                     "form_type": "string"

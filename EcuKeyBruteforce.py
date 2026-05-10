@@ -166,15 +166,18 @@ class BFState:
 
 
 def _seed_subfunc(level: int, protocol: str) -> str:
-    if protocol.startswith("kwp"):
-        return "81" if level == 1 else "83"
-    return "01" if level == 1 else "03"
+    """RequestSeed sub-function for given SA level.
+    UDS:  L1=01, L2=03, L3=05, L4=07, L5=09, L6=0B, L7=0D  (odd = 2*N - 1)
+    KWP:  L1=81, L2=83, L3=85, ...                          (UDS odd + 0x80)
+    """
+    base = 0x80 if protocol.startswith("kwp") else 0x00
+    return f"{base + (2 * level - 1):02X}"
 
 
 def _key_subfunc(level: int, protocol: str) -> str:
-    if protocol.startswith("kwp"):
-        return "82" if level == 1 else "84"
-    return "02" if level == 1 else "04"
+    """SendKey sub-function (even, paired with seed)."""
+    base = 0x80 if protocol.startswith("kwp") else 0x00
+    return f"{base + (2 * level):02X}"
 
 
 def _get_nrc(reply: str, protocol: str) -> Optional[str]:
@@ -344,45 +347,50 @@ class Bruteforcer:
         return r.upper() == positive
 
     # ── auto-detection of the right (session, SA level) combo ──────────────
-    def _request_seed_once_for_detect(self) -> Optional[int]:
-        """Single-shot seed for combo detection: tolerate NRC 37 only, no other retries."""
+    def _request_seed_once_for_detect(self) -> Tuple[Optional[int], str]:
+        """Single-shot seed request for combo probing.
+        Returns (seed_int_or_None, last_response_string).  The caller can
+        log the response so the user sees the actual NRC."""
         seed_sub = _seed_subfunc(self.cfg.sa_level, self.cfg.protocol)
         seed_cmd = "27" + seed_sub
         positive_prefix = "67" + seed_sub
+        last = ""
         for _ in range(3):
             if self._should_stop():
-                return None
+                return (None, last)
             r = self._send(seed_cmd)
+            last = r
             if r.startswith(positive_prefix) and len(r) >= 12:
                 try:
-                    return int(r[4:12], 16)
+                    return (int(r[4:12], 16), r)
                 except ValueError:
-                    return None
+                    return (None, r)
             nrc = _get_nrc(r, self.cfg.protocol)
             if nrc == NRC_REQUIRED_TIME_DELAY:
                 time.sleep(0.5)
                 continue
-            # Any other reply (NRC 22, 12, 11, 33...) — combo doesn't fit
-            return None
-        return None
+            return (None, r)
+        return (None, last)
 
     def _detect_combo(self) -> bool:
         """Try (session, SA-level) combos until one returns a seed.
 
-        Order: configured default first, then most common alternatives.
-        Engine ECUs often need SA L1; some flash-locked modules need 1002
-        (Programming) instead of 1003 (Extended).  Each probe adds ~1-2 s.
+        UDS: levels L1..L7 → sub-functions 27 01, 27 03, 27 05, 27 07,
+                                            27 09, 27 0B, 27 0D.
+        Sessions tried: 1003 (Extended), 1002 (Programming), 1001 (Default).
+        Logs the actual response for every failed combo so the user can see
+        what NRC the ECU returned (helpful for "no combo found" cases).
         """
         candidates: List[Tuple[str, int]] = []
         candidates.append((self.cfg.diag_session, self.cfg.sa_level))
         if self.cfg.protocol == "uds":
-            for sess in ("1003", "1002"):
-                for lvl in (1, 2, 3):
+            for sess in ("1003", "1002", "1001"):
+                for lvl in (1, 2, 3, 4, 5, 6, 7):
                     if (sess, lvl) not in candidates:
                         candidates.append((sess, lvl))
         else:
-            # KWP: only vary the SA level; session is protocol-defined
-            for lvl in (1, 2, 3):
+            # KWP: vary the SA level; session is protocol-defined
+            for lvl in (1, 2, 3, 4, 5, 6, 7):
                 if (self.cfg.diag_session, lvl) not in candidates:
                     candidates.append((self.cfg.diag_session, lvl))
 
@@ -392,21 +400,24 @@ class Bruteforcer:
                 return False
             self.cfg.diag_session = sess
             self.cfg.sa_level = lvl
-            sub = _seed_subfunc(lvl, self.cfg.protocol)
-            self.log(f"   trying session={sess}, SA L{lvl}  (27 {sub})")
+            seed_sub = _seed_subfunc(lvl, self.cfg.protocol)
+            key_sub = _key_subfunc(lvl, self.cfg.protocol)
+            self.log(f"   trying session={sess}, SA L{lvl}  (27 {seed_sub}/{key_sub})")
             if not self._open_session():
                 self._close_session()
-                self.log(f"     session-open failed, next combo")
+                self.log(f"     -- session {sess} did not open, next combo")
                 continue
-            seed = self._request_seed_once_for_detect()
+            seed, last_reply = self._request_seed_once_for_detect()
             self._close_session()
             if seed is not None:
                 self.log(f"   * working combo found: session={sess}, "
-                         f"SA L{lvl} (27 {sub}/27 {_key_subfunc(lvl, self.cfg.protocol)}); "
+                         f"SA L{lvl} (27 {seed_sub}/27 {key_sub}); "
                          f"sample seed={seed:08X}")
                 return True
+            self.log(f"     -- 27 {seed_sub} -> {last_reply}")
             time.sleep(0.3)
         self.log("   ! no working SA combo found — aborting")
+        self.log("     (review the NRCs above to figure out the next move)")
         return False
 
     # ── verification ───────────────────────────────────────────────────────
