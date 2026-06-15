@@ -323,13 +323,16 @@ class EcuZoneTreeViewWidget(QTreeWidget):
                         if bool(child.data(0, Qt.UserRole + 1)):
                             child.setHidden(True)
                             continue
-                        child_param_name = child.text(1).lower()
-                        child_matches_search = search_lower in child_param_name
-
-                        # Hide/show individual children based on search
-                        child.setHidden(not child_matches_search)
-                        if child_matches_search:
+                        if top_level_matches:
+                            # Parent zone matches - show all children
+                            child.setHidden(False)
                             child_matches = True
+                        else:
+                            child_param_name = child.text(1).lower()
+                            child_matches_search = search_lower in child_param_name
+                            child.setHidden(not child_matches_search)
+                            if child_matches_search:
+                                child_matches = True
 
                     # Hide top-level item only if neither it nor any of its children match
                     if not top_level_matches and not child_matches:
